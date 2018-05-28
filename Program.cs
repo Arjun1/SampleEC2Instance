@@ -19,7 +19,7 @@ namespace AWS.SDK.EC2
 			string stringToConvert = "GET\n" +
 				"ec2.amazonaws.com\n" +
 				"/\n" +
-				"AWSAccessKeyId=AKIAI2POF6TWGLEHB7UQ" +
+				"AWSAccessKeyId={}" +
 				"&Action=DescribeInstances" +
 				//"&Filter.1.Name=availability-zone" +
 				//"&Filter.1.value.1=us.east-1a" +
@@ -28,7 +28,7 @@ namespace AWS.SDK.EC2
 				"&Timestamp=" + timestamp +
 				"&Version=2011-12-15"; // IMM uses version
 
-			string awsPrivateKey = "1sqdFU0wo8kVyQTBmsu42NMmfirOSqhgireRMGw8";
+			string awsPrivateKey = "{}";
 
 			Encoding ae = new UTF8Encoding();
 			HMACSHA1 signature = new HMACSHA1();
@@ -45,7 +45,7 @@ namespace AWS.SDK.EC2
 				"&Signature=" + urlEncodedCanonical +
 				"&SignatureVersion=2" +
 				"&SignatureMethod=HmacSHA1" +
-				"&AWSAccessKeyId=AKIAI2POF6TWGLEHB7UQ";
+				"&AWSAccessKeyId={}";
 
 			HttpWebRequest req = WebRequest.Create(ec2Url) as HttpWebRequest;
 			XmlDocument xmlDoc = new XmlDocument();
