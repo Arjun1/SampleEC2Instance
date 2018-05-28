@@ -36,6 +36,10 @@
     <Reference Include="AWSSDK.EC2">
       <HintPath>..\packages\AWSSDK.EC2.3.3.52\lib\net45\AWSSDK.EC2.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
