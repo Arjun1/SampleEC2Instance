@@ -1,2 +1,3 @@
 # SampleEC2Instance
-Query an EC2 instance using .net Native http request and Amazon SDK APIs
+Query for EC2 instances description using Native http request.
+Add tags to an EC2c instance using Amazon SDK apis.
