@@ -5,6 +5,9 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using System.IO;
+using Amazon.EC2;
+using Amazon.EC2.Model;
+using System.Configuration;
 
 namespace AWS.SDK.EC2
 {
@@ -12,23 +15,42 @@ namespace AWS.SDK.EC2
 	{
 		public static void Main(string[] args)
 		{
+			// query using .net native api
+			queryForInstancesDescription();
+
+			// add tag to an existing instance using Amazon SDK lib
+			AddTag();
+		}
+
+		private static void AddTag()
+		{
+			AmazonEC2Client client = new AmazonEC2Client();
+			CreateTagsRequest tagReq = new CreateTagsRequest();
+			tagReq.Resources = new System.Collections.Generic.List<string> { "instanceId" };
+			tagReq.Tags = new System.Collections.Generic.List<Tag> { new Tag() { Key = "tagKey", Value = "tagValue" } };
+			CreateTagsResponse tagResp = client.CreateTags(tagReq);
+			Console.WriteLine("EC2 Tag created- {0}", tagResp.ResponseMetadata);
+		}
+
+		private static void queryForInstancesDescription()
+		{
 			// #1 describe the instance
 			string timestamp = CalculateTimestamp();
-
+			string accessKey = ConfigurationManager.AppSettings.Get("AWSAccessKey");
+			string awsPrivateKey = ConfigurationManager.AppSettings.Get("AWSSecreteKey");
 			//create string to sign  must be alpha ordered.
 			string stringToConvert = "GET\n" +
 				"ec2.amazonaws.com\n" +
 				"/\n" +
-				"AWSAccessKeyId={}" +
+				"AWSAccessKeyId=" + accessKey +
 				"&Action=DescribeInstances" +
 				//"&Filter.1.Name=availability-zone" +
 				//"&Filter.1.value.1=us.east-1a" +
 				"&SignatureMethod=HmacSHA1" +
 				"&SignatureVersion=2" +
 				"&Timestamp=" + timestamp +
-				"&Version=2011-12-15"; // IMM uses version
+				"&Version=2011-12-15"; // IAM uses version
 
-			string awsPrivateKey = "{}";
 
 			Encoding ae = new UTF8Encoding();
 			HMACSHA1 signature = new HMACSHA1();
@@ -36,7 +58,10 @@ namespace AWS.SDK.EC2
 			byte[] bytes = ae.GetBytes(stringToConvert);
 			byte[] moreBytes = signature.ComputeHash(bytes);
 			string encodedCanonical = Convert.ToBase64String(moreBytes);
-			string urlEncodedCanonical = HttpUtility.UrlEncode(encodedCanonical).Replace("+","%20").Replace("%3d","%3D").Replace("%3a","%3A");
+			string urlEncodedCanonical = HttpUtility.UrlEncode(encodedCanonical)
+			                                        .Replace("+", "%20")
+			                                        .Replace("%3d", "%3D")
+			                                        .Replace("%3a", "%3A");
 
 			//actual URL string
 			string ec2Url = "https://ec2.amazonaws.com/?Action=DescribeInstances" +
