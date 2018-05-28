@@ -1,2 +1,2 @@
 # SampleEC2Instance
-Creating an EC2 instance using Amazon SDK APIs
+Querin an EC2 instance using .net Native http request and Amazon SDK APIs
